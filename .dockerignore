@@ -1,0 +1,12 @@
+*.pyc
+*.pyo
+.git
+.gitmodules
+.vscode/
+.doc/
+.idea/
+.env
+doc
+fastapi/model/*
+data/test_data*
+logs/

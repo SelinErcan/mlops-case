@@ -1,0 +1,4 @@
+doc/
+fastapi/model/*
+logs/
+data/test_data*

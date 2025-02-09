@@ -1,0 +1,27 @@
+# Use Python base image
+FROM python:3.9-slim
+
+# Install PostgreSQL development libraries and other dependencies
+RUN apt-get update && apt-get install -y \
+    libpq-dev \
+    gcc \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set the working directory
+WORKDIR /app
+
+# Copy requirements.txt (ensure it exists in the current directory)
+COPY requirements.txt /app/
+
+# Upgrade pip and install dependencies in a single step to reduce layers
+RUN pip install --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
+
+# Copy the application code
+COPY . /app/
+
+# Expose port 8000 for FastAPI
+EXPOSE 8000
+
+# Command to run the FastAPI app with Uvicorn
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]

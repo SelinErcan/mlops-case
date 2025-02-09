@@ -1,0 +1,71 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:latest
+    container_name: postgres-container
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: loan_database
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./data:/docker-entrypoint-initdb.d/data
+    ports:
+      - "5432:5432"
+    networks:
+      - mynetwork
+
+  api:
+    build: ./fastapi 
+    container_name: fastapi-container
+    environment:
+      - DATABASE_URL=postgresql://myuser:mypassword@db:5432/loan_database
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    networks:
+      - mynetwork
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "pg_isready", "-h", "db", "-U", "myuser"]
+      interval: 10s
+      retries: 5
+      
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus-container
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+      - mynetwork
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana-container
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: 'admin'
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+    networks:
+      - mynetwork
+    volumes:
+      - ./provisioning:/etc/grafana/provisioning
+
+  node_exporter:
+    image: prom/node-exporter:latest
+    container_name: node-exporter
+    ports:
+      - "9100:9100"
+    networks:
+      - mynetwork
+
+networks:
+  mynetwork:
+    driver: bridge

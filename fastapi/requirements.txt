@@ -1,0 +1,15 @@
+fastapi 
+uvicorn
+ipykernel
+pandas 
+pyodbc
+psycopg2
+tensorflow
+scipy
+scikit-learn
+scikeras
+plotly
+python-multipart
+prometheus_fastapi_instrumentator
+psutil
+sqlalchemy

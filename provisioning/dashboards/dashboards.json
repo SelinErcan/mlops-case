@@ -1,0 +1,29 @@
+{
+  "dashboard": {
+    "id": null,
+    "uid": "loan-prediction-dashboard",
+    "title": "Loan Prediction Metrics",
+    "panels": [
+      {
+        "type": "graph",
+        "title": "API Latency",
+        "targets": [
+          {
+            "expr": "loan_prediction_api_latency_seconds",
+            "interval": "",
+            "intervalFactor": 2,
+            "legendFormat": "{{job}}",
+            "refId": "A"
+          }
+        ],
+        "xaxis": {
+          "mode": "time"
+        },
+        "yaxis": {
+          "format": "short"
+        }
+      }
+    ]
+  },
+  "overwrite": true
+}
