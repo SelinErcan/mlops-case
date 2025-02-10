@@ -52,7 +52,6 @@ async def predict(file: UploadFile = File(...)):
             numeric_columns = test_df.select_dtypes(include=["number"]).columns.tolist()
             categorical_columns = test_df.select_dtypes(exclude=["number"]).columns.tolist()
 
-            # Data drift detection
             drift_detected = False
             drift_results = []
             for column in numeric_columns:
@@ -68,6 +67,8 @@ async def predict(file: UploadFile = File(...)):
 
             if drift_detected:
                 logging.info("Triggering model retraining...")
+                model_run.retrain_model(train_df)
+
 
             test_df[numeric_columns] = scaler.transform(test_df[numeric_columns])  
             encoded_test = encoder.transform(test_df[categorical_columns])  
@@ -86,7 +87,7 @@ async def predict(file: UploadFile = File(...)):
             else:
                 monitoring_data["actual"] = None  
 
-            db.save_to_monitoring(monitoring_data)  
+            db.save_to_table(monitoring_data, table_name="monitoring") 
 
             result = {"drift_results": drift_results}
 

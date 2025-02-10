@@ -10,3 +10,4 @@ doc
 fastapi/model/*
 data/test_data*
 logs/
+*mlruns

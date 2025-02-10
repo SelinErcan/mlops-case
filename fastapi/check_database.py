@@ -47,7 +47,7 @@ def fetch_data(query="SELECT * FROM training_data;"):
         print(f"❌ Error fetching data: {e}")
         return None
 
-def save_to_monitoring(df):
+def save_to_table(df, table_name):
     try:
         conn = psycopg2.connect(DATABASE_URL)
         with conn.cursor() as cursor:
@@ -55,12 +55,9 @@ def save_to_monitoring(df):
             column_list_str = ', '.join(df.columns)
 
             insert_query = f"""
-            INSERT INTO monitoring ({column_list_str})
+            INSERT INTO {table_name} ({column_list_str})
             VALUES %s
-            ON CONFLICT (person_age, person_gender, person_education, person_income, 
-                                           person_emp_exp, person_home_ownership, loan_amnt, loan_intent, 
-                                           loan_int_rate, loan_percent_income, cb_person_cred_hist_length, 
-                                           credit_score, previous_loan_defaults_on_file, loan_status, prediction, actual)
+            ON CONFLICT ({column_list_str})
             DO NOTHING;
             """
 

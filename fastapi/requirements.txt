@@ -1,6 +1,7 @@
 fastapi 
 uvicorn
 ipykernel
+mlflow
 pandas 
 pyodbc
 psycopg2
@@ -12,4 +13,3 @@ plotly
 python-multipart
 prometheus_fastapi_instrumentator
 psutil
-sqlalchemy
